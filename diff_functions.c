@@ -1,12 +1,12 @@
 #include "differ.h"
 
-
+/*
 int GetNum(char ** sample)
 {
 	int temp = 0;
 
 	assert(**sample != '\0');
-	
+	 
 	while('0' <= **sample && **sample <= '9')
 	{
 		temp = temp * 10 + (**sample - '0');
@@ -80,7 +80,7 @@ int GetBracket(char ** sample)
 		int value = GetAdd(sample);
 
 		assert(**sample == ')');
-		
+
 		(*sample)++;
 
 		return value;
@@ -88,3 +88,6 @@ int GetBracket(char ** sample)
 	else
 		return GetNum(sample);
 }
+*/
+
+
