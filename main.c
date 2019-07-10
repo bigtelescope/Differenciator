@@ -7,24 +7,12 @@ int main()
 
 	Tree * two = GetResult(arr);
 	ShowTree(two->node);
-/*
-	Tree one;
 
-	one.node = CreateNode();
+	printf("\n\nafter differentiation\n\n");
 
-	one.node->left = CreateNode();
-	one.node->left->value = 11;
+	Tree three;
+	three.node = d(two->node);
+	ShowTree(three.node);
 
-	one.node->right = CreateNode();
-	one.node->right->sign = "+";
-
-	one.node->right->right = CreateNode();
-	one.node->right->right->temp = "x";
-
-	one.node->right->left = CreateNode();
-	one.node->right->left->function = "sin";
-
-	//ShowTree(one.node);
-*/
 	return 0;
 }
