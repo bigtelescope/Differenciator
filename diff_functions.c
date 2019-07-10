@@ -1,93 +1,103 @@
 #include "differ.h"
 
-/*
-int GetNum(char ** sample)
+Node * d(Node * node)
 {
-	int temp = 0;
+	if(node->value)
+		return CreateNode();
 
-	assert(**sample != '\0');
-	 
-	while('0' <= **sample && **sample <= '9')
-	{
-		temp = temp * 10 + (**sample - '0');
-		(*sample)++;
-	}
+	if(node->temp)
+		return DiffTempNode();
 
-	return temp;
+	if(node->sign == '+' || node->sign == '-')
+		return DiffAddNode(node);
+
+	if(node->sign == '*')
+		return DiffMultNode(node);
+
+	if(node->sign == '/')
+		return DiffDivNode(node);
+
+	if(node->sign == '^')
+		return DiffDegreeNode(node);
+
+	if(!strcmp("ln", node->function))
+		return DiffLnNode(node);
 }
 
-int GetResult(char * sample)
+Node * DiffAddNode(Node * node)
 {
-	char * pointer = sample;
+	Node * differ_node = CreateNode();
 
-	int value = GetAdd(&pointer);
+	differ_node->sign 	= node->sign;
+	differ_node->left 	= d(node->left);
+	differ_node->right 	= d(node->right);
 
-	assert(*pointer == '\0');
-
-	return value;
+	return differ_node;
 }
 
-int GetAdd(char ** sample)
+Node * DiffTempNode()
 {
-	int value = GetMult(sample);
+	Node * temp_node = CreateNode();
+	temp_node->value = X_DIFFERENTIAL;
 
-	char symbol;
-
-	while(**sample == '+' || **sample == '-')
-	{
-		symbol = **sample;
-
-		(*sample)++;
-
-		int temp = GetMult(sample);
-
-		if(symbol == '+')
-			value += temp;
-		else
-			value -= temp;
-	}
-
-	return value;
+	return temp_node;
 }
 
-int GetMult (char ** sample)
+Node * DiffMultNode(Node * node)
 {
-	int value = GetBracket(sample);
+	Node * new_left  = d(node->left);
+	Node * new_right = d(node->right);
 
-	char operation;
+	Node * left_node = CreateSignNode('*', new_left);
+	left_node->right = node->right;
 
-	while(**sample == '*' || **sample == '/')
-	{
-		operation = **sample;
+	Node * right_node = CreateSignNode('*', node->left);
+	right_node->right = new_right;
 
-		(*sample)++;
+	Node * main_node = CreateSignNode('+', left_node);
+	main_node->right = right_node;
 
-		if(operation == '*')
-			value = value * GetNum(sample);
-		else
-			value = value / GetNum(sample);
-	}
-
-	return value;
+	return main_node;
 }
 
-int GetBracket(char ** sample)
+Node * DiffDivNode(Node * node)
 {
-	if(**sample == '(')
-	{
-		(*sample)++;
+	Node * new_left  = d(node->left);
+	Node * new_right = d(node->right);
 
-		int value = GetAdd(sample);
+	Node * left_node = CreateSignNode('*', new_left);
+	left_node->right = node->right;
 
-		assert(**sample == ')');
+	Node * right_node = CreateSignNode('*', node->left);
+	right_node->right = new_right;
 
-		(*sample)++;
+	Node * numerator = CreateSignNode('-', left_node);
+	numerator->right = right_node;
 
-		return value;
-	}
-	else
-		return GetNum(sample);
+	Node * denominator = CreateSignNode('*', node->right);
+	denominator->right = node->right;
+
+	Node * main_node = CreateSignNode('/', numerator);
+	main_node->right = denominator;
+
+	return main_node;
 }
-*/
 
+Node * DiffLnNode(Node * node)
+{
+	Node * one_num = CreateNode();
+	one_num->value = ONE;
 
+	Node * temp_node = CreateSignNode('/', one_num);
+	temp_node->right = node->right;
+
+	Node * main_node = CreateSignNode('*', temp_node);
+	main_node->right = d(node->right);
+
+	return main_node;
+}
+
+Node * DiffDegreeNode(Node * node)
+{
+	return NULL;
+}
