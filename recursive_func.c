@@ -9,56 +9,135 @@ Tree * GetResult(char * sample)
 	tree->node = GetAdd(&pointer);
 
 	if(*pointer != '\0')
-		printf("bad pointer is %c\n", *pointer);
+		printf("------bad pointer is %c-------\n", *pointer);
 
 	return tree;
 }
 
 Node * GetAdd(char ** sample)
 {
-	//printf("HERER'S GetAdd\n");
-	Node * left_node = GetNum(sample);
+	Node * main_node = GetMult(sample);
 
-	char 	symbol;
-	Node * 	new_one;
+	Node * temp_node;
+	char symbol;
 
-	if(**sample == '+' || **sample == '-')
+	while(**sample == '+' || **sample == '-')
 	{
 		symbol = **sample;
 
 		(*sample)++;
 
+		temp_node = main_node;
+
 		if(symbol == '+')
-			new_one = CreateSignNode("+", left_node);
+			main_node = CreateSignNode('+', temp_node);
 		else
-			new_one = CreateSignNode("-", left_node);
+			main_node = CreateSignNode('-', temp_node);
 
-		new_one->right = GetAdd(sample);
-
-		return new_one;
+		main_node->right = GetMult(sample);
 	}
 
-	return left_node;
+	return main_node;
 }
 
 Node * GetMult(char ** sample)
 {
-	return NULL;
+	Node * main_node = GetDegree(sample);
+
+	Node * temp_node;
+	char symbol;
+
+	while(**sample == '*' || **sample == '/')
+	{
+		symbol = **sample;
+
+		(*sample)++;
+
+		temp_node = main_node;
+
+		if(symbol == '*')
+			main_node = CreateSignNode('*', temp_node);
+		else
+			main_node = CreateSignNode('/', temp_node);
+
+		main_node->right = GetDegree(sample);
+	}
+
+	return main_node;
+}
+
+Node * GetDegree(char ** sample)
+{
+	Node * main_node = GetLn(sample);
+
+	if(**sample == '^')
+	{
+		Node * temp_node = main_node;
+
+		(*sample)++;
+
+		main_node = CreateSignNode('^', temp_node);
+		main_node->right = GetLn(sample);
+	}
+
+	return main_node;
+}
+
+Node * GetLn(char ** sample)
+{
+	if(!strncmp(*sample, "ln", TWO))
+	{
+		(*sample) += TWO;
+		return CreateLnNode(GetBracket(sample));
+	}
+	else
+		return GetBracket(sample);
+}
+
+Node * GetBracket(char ** sample)
+{
+	if(**sample == '(')
+	{
+		(*sample)++;
+
+		Node * brackets = GetAdd(sample);
+
+		assert(**sample == ')');
+
+		(*sample)++;
+
+		return brackets;
+	}
+	else
+		return GetNum(sample);
 }
 
 Node * GetNum(char ** sample)
 {
-	int temp = 0;
-
-	assert(**sample != '\0');
-
-	while('0' <= **sample && **sample <= '9')
+	if('0' <= **sample && **sample <= '9')
 	{
-		temp = temp * 10 + (**sample - '0');
-		(*sample)++;
+		assert(**sample != '\0');
+
+		int temp = 0;
+
+		while('0' <= **sample && **sample <= '9')
+		{
+			temp = temp * 10 + (**sample - '0');
+			(*sample)++;
+		}
+		return CreateNumNode(temp);
 	}
+	else
+		return GetVariable(sample);
+}
 
-	//printf("temp = %d\n", temp);
-
-	return CreateNumNode(temp);
+Node * GetVariable(char ** sample)
+{
+	if(**sample == 'x')
+	{	
+		(*sample)++;
+		return CreateVolNode();
+	}
+	else
+		return NULL;
 }

@@ -4,8 +4,8 @@ Node * CreateNode()
 {
 	Node * new_one = (Node *)calloc(1, sizeof(Node));
 
-	new_one->sign 		= NULL;
 	new_one->temp 		= NULL;
+	new_one->sign 		= 0;
 	new_one->value 		= 0;
 	new_one->function	= NULL;
 
@@ -15,7 +15,7 @@ Node * CreateNode()
 	return new_one;
 }
 
-Node * CreateSignNode(char * arg, Node * left_node)
+Node * CreateSignNode(char arg, Node * left_node)
 {
 	Node * node = CreateNode();
 
@@ -23,6 +23,24 @@ Node * CreateSignNode(char * arg, Node * left_node)
 	node->left 	= left_node;
 
 	return node;
+}
+
+Node * CreateVolNode()
+{
+	Node * node = CreateNode();
+	node->temp = "x";
+
+	return node;
+}
+
+Node * CreateLnNode(Node * node)
+{
+	Node * main_node = CreateNode();
+
+	main_node->function = "ln";
+	main_node->right 	= node;
+
+	return main_node;
 }
 
 Node * CreateNumNode(int arg_value)
@@ -36,12 +54,14 @@ Node * CreateNumNode(int arg_value)
 
 void ShowTree(Node * node)
 {
+	printf("START\n");
+
 	if(node->value)
 		printf("value = %d\n", node->value);
 	else if(node->temp)
 		printf("temp = %s\n", node->temp);
-	else if(node->temp)
-		printf("sign = %s\n", node->sign);
+	else if(node->sign)
+		printf("sign = %c\n", node->sign);
 	else if(node->function)
 		printf("function = %s\n", node->function);
 
@@ -52,4 +72,6 @@ void ShowTree(Node * node)
 
 	if(node->right)
 		ShowTree(node->right);
+
+	printf("FINISH\n");
 }
