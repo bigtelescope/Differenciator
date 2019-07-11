@@ -2,7 +2,7 @@
 
 Node * CreateNode()
 {
-	Node * new_one = (Node *)calloc(1, sizeof(Node));
+	Node * new_one = (Node *)calloc(ONE, sizeof(Node));
 
 	new_one->temp 		= NULL;
 	new_one->sign 		= 0;
@@ -64,6 +64,8 @@ void ShowTree(Node * node)
 		printf("sign = %c\n", node->sign);
 	else if(node->function)
 		printf("function = %s\n", node->function);
+	else 
+		printf("here is only value = 0\n");
 
 	printf("\n");
 
@@ -74,4 +76,69 @@ void ShowTree(Node * node)
 		ShowTree(node->right);
 
 	printf("FINISH\n");
+}
+
+bool isEmpty(Node * node)
+{
+	if(node->value || node->temp ||
+	   			  node->function || node->sign)
+		return false;
+	else
+		return true;
+}
+
+bool isUnit(Node * node)
+{
+	if(node->value == ONE)
+		return true;
+	else
+		return false;
+}
+
+bool areSame(Node * left, Node * right)
+{
+	if(left->value == right->value && left->value)
+		return true;
+	else if(left->temp == right->temp && left->temp)
+		return true;
+	else
+		return false;
+}
+
+Node * Bypass(Node * node)
+{
+	if(node->left)
+		node->left = Bypass(node->left);
+
+	if(node->right)
+		node->right = Bypass(node->right);
+
+	if(node->sign == '*')
+	{
+		if(isEmpty(node->left) || isEmpty(node->right))
+			return node = CreateNode();
+
+		if(isUnit(node->left))
+			return node = node->right;
+		else if(isUnit(node->right))
+			return node = node->left;
+	}
+
+	if(node->sign == '+')
+	{
+		if(!isEmpty(node->left) && isEmpty(node->right))
+			return node = node->left;
+
+		if(isEmpty(node->left) && !isEmpty(node->right))
+			return node = node->right;
+
+		if(isEmpty(node->left) && isEmpty(node->right))
+			return node = CreateNode();
+	}
+
+	if(node->sign == '-')
+		if(areSame(node->left, node->right))
+			return node = CreateNode();
+
+	return node;
 }
