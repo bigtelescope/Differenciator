@@ -2,6 +2,8 @@
 
 Node * d(Node * node)
 {
+	printf("open d\n");
+
 	if(node->value)
 		return CreateNode();
 
@@ -20,8 +22,15 @@ Node * d(Node * node)
 	if(node->sign == '^')
 		return DiffDegreeNode(node);
 
-	if(!strcmp("ln", node->function))
-		return DiffLnNode(node);
+	if(node->function)
+		if(!strcmp("ln", node->function))
+			return DiffLnNode(node);
+
+	if(node->value == 0)
+	{
+		printf("(((((((((((\n");
+		return CreateNode();
+	}
 }
 
 Node * DiffAddNode(Node * node)
@@ -47,7 +56,7 @@ Node * DiffMultNode(Node * node)
 {
 	Node * new_left  = d(node->left);
 	Node * new_right = d(node->right);
-
+	printf("here\n");
 	Node * left_node = CreateSignNode('*', new_left);
 	left_node->right = node->right;
 
@@ -99,5 +108,14 @@ Node * DiffLnNode(Node * node)
 
 Node * DiffDegreeNode(Node * node)
 {
-	return NULL;
+	Node * static_node = CreateSignNode('^', node->left);
+	static_node->right = node->right;
+
+	Node * argument_node = CreateSignNode('*', node->right);
+	argument_node->right = CreateLnNode(node->left);
+
+	Node * main_node = CreateSignNode('*', static_node);
+	main_node->right = d(argument_node);
+
+	return main_node;
 }
