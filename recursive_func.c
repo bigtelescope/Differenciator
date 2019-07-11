@@ -125,6 +125,7 @@ Node * GetNum(char ** sample)
 			temp = temp * 10 + (**sample - '0');
 			(*sample)++;
 		}
+
 		return CreateNumNode(temp);
 	}
 	else
