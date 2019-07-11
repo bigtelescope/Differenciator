@@ -14,5 +14,10 @@ int main()
 	three.node = d(two->node);
 	ShowTree(three.node);
 
+	printf("\n\nafter bypassing\n\n");
+
+	three.node = Bypass(three.node);
+	ShowTree(three.node);
+
 	return 0;
 }

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define ONE 1
 #define TWO 2
@@ -55,5 +56,10 @@ Node * DiffDivNode		(Node *);
 Node * DiffMultNode		(Node *);
 Node * DiffLnNode 		(Node *);
 Node * DiffDegreeNode 	(Node *);
+
+Node * 	Bypass 	(Node *);
+bool 	isEmpty (Node *);
+bool 	isUnit 	(Node *);
+bool 	areSame	(Node *, Node *);
 
 #endif
