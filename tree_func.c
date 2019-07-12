@@ -105,6 +105,25 @@ bool areSame(Node * left, Node * right)
 		return false;
 }
 
+bool areValue(Node * first, Node * second)
+{
+	if( (first->value	&& second->value)	||
+		(first->value 	&& isEmpty(second)) ||
+		(isEmpty(first) && second->value) 	||
+		(isEmpty(first) && isEmpty(second)))
+		return true;
+	else
+		return false;
+}
+
+bool areTemp(Node * first, Node * second)
+{
+	if(first->temp && second->temp)
+		return true;
+	else
+		return false;
+}
+
 Node * Bypass(Node * node)
 {
 	if(node->left)
@@ -114,31 +133,16 @@ Node * Bypass(Node * node)
 		node->right = Bypass(node->right);
 
 	if(node->sign == '*')
-	{
-		if(isEmpty(node->left) || isEmpty(node->right))
-			return node = CreateNode();
+		return MultOptimization(node);
 
-		if(isUnit(node->left))
-			return node = node->right;
-		else if(isUnit(node->right))
-			return node = node->left;
-	}
+	if(node->sign == '/')
+		return DivOptimization(node);
 
 	if(node->sign == '+')
-	{
-		if(!isEmpty(node->left) && isEmpty(node->right))
-			return node = node->left;
-
-		if(isEmpty(node->left) && !isEmpty(node->right))
-			return node = node->right;
-
-		if(isEmpty(node->left) && isEmpty(node->right))
-			return node = CreateNode();
-	}
+		return AddOptimization(node);
 
 	if(node->sign == '-')
-		if(areSame(node->left, node->right))
-			return node = CreateNode();
+		return SubOptimization(node);
 
 	return node;
 }
