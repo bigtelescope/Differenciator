@@ -7,6 +7,12 @@ int main()
 
 	Tree * two = GetResult(arr);
 	ShowTree(two->node);
+/*
+	printf("\n\nafter bypassing\n\n");
+
+	two->node = Bypass(two->node);
+	ShowTree(two->node);
+*/
 
 	printf("\n\nafter differentiation\n\n");
 
@@ -18,6 +24,8 @@ int main()
 
 	three.node = Bypass(three.node);
 	ShowTree(three.node);
+
+	MakeTex(two->node, three.node);
 
 	return 0;
 }
