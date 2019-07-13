@@ -8,8 +8,7 @@ Tree * GetResult(char * sample)
 
 	tree->node = GetAdd(&pointer);
 
-	if(*pointer != '\0')
-		printf("------bad pointer is %c-------\n", *pointer);
+	assert(*pointer == '\0');
 
 	return tree;
 }
