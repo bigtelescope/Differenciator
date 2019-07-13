@@ -54,8 +54,6 @@ Node * CreateNumNode(int arg_value)
 
 void ShowTree(Node * node)
 {
-	printf("START\n");
-
 	if(node->value)
 		printf("value = %d\n", node->value);
 	else if(node->temp)
@@ -74,8 +72,6 @@ void ShowTree(Node * node)
 
 	if(node->right)
 		ShowTree(node->right);
-
-	printf("FINISH\n");
 }
 
 bool isEmpty(Node * node)
@@ -124,8 +120,20 @@ bool areTemp(Node * first, Node * second)
 		return false;
 }
 
+bool areEqual(Node * first, Node * second)
+{
+	if(areSame (first, second)			&&
+		(first->left == second->left) 	&&
+		(first->right == second->right))
+		return true;
+	else
+		return false;
+}
+
 Node * Bypass(Node * node)
 {
+	Node * tempor;
+
 	if(node->left)
 		node->left = Bypass(node->left);
 
@@ -133,16 +141,32 @@ Node * Bypass(Node * node)
 		node->right = Bypass(node->right);
 
 	if(node->sign == '*')
-		return MultOptimization(node);
+		if(tempor = MultOptimization(node))
+		{
+			node = tempor;
+			node = Bypass(node);
+		}
 
 	if(node->sign == '/')
-		return DivOptimization(node);
+		if(tempor = DivOptimization(node))
+		{
+			node = tempor;
+			node = Bypass(node);
+		}
 
 	if(node->sign == '+')
-		return AddOptimization(node);
+		if(tempor = AddOptimization(node))
+		{
+			node = tempor;
+			node = Bypass(node);
+		}
 
 	if(node->sign == '-')
-		return SubOptimization(node);
+		if(tempor = SubOptimization(node))
+		{
+			node = tempor;
+			node = Bypass(node);
+		}
 
 	return node;
 }
