@@ -17,12 +17,11 @@ Node * AddOptimization(Node * node)
 	if(areValue(node->left, node->right))
 		return node = CreateNumNode(node->left->value + node->right->value);
 
-	return node;
+	return NULL;
 }
 
 Node * DivOptimization(Node * node)
 {
-	//By the way, what should I do when I have a zero at a denominator?
 
 	if(isEmpty(node->left))
 		return node = CreateNode();
@@ -30,7 +29,7 @@ Node * DivOptimization(Node * node)
 	if(isUnit(node->right))
 		return node = node->right;
 
-	return node;
+	return NULL;
 }
 
 Node * SubOptimization(Node * node)
@@ -45,9 +44,9 @@ Node * SubOptimization(Node * node)
 		return node = node->left;
 
 	if(isEmpty(node->left) && !isEmpty(node->right))
-		return Optimisation_7(node);
+		return node = Optimisation_7(node);
 
-	return node;
+	return NULL;
 }
 
 Node * MultOptimization(Node * node)
@@ -59,6 +58,9 @@ Node * MultOptimization(Node * node)
 		return node = node->right;
 	else if(isUnit(node->right))
 		return node = node->left;
+
+	if(areValue(node->left, node->right))
+		return CreateNumNode(node->left->value * node->right->value);
 
 	if(node->left->sign == '*')
 	{
@@ -85,7 +87,39 @@ Node * MultOptimization(Node * node)
 		if(areValue(node->left, node->right->left))
 			return Optimisation_6(node);
 
-	return node;
+	if(node->left->sign == '^')
+	{
+		if(areTemp(node->left->left, node->right))
+			return Optimisation_9(node);
+
+		if(node->right->sign == '/' &&
+			areTemp(node->left->left, node->right->right))
+			return Optimisation_10(node);
+
+		if(node->right->sign == '*' &&
+			areTemp(node->left->left, node->right->left))
+			return Optimisation_11(node);
+
+		if(node->right->sign == '^' &&
+			areTemp(node->left->left, node->right->left))
+			return Optimisation_12(node);
+	}
+
+	if(node->right->sign == '^')
+	{
+		if(areTemp(node->left, node->right->left))
+			return Optimisation_13(node);
+
+		if(node->left->sign == '/' &&
+			areTemp(node->left->right, node->right->left))
+			return Optimisation_14(node);
+
+		if(node->left->sign == '*' &&
+			areTemp(node->left->left, node->right->left))
+			return Optimisation_15(node);
+	}
+
+	return NULL;
 }
 
 Node * Optimisation_1(Node * node)
@@ -174,13 +208,81 @@ Node * Optimisation_8(Node * node)
 
 Node * Optimisation_9(Node * node)
 {
+	Node * right_node = CreateSignNode('+', node->left->right);
+	right_node->right = CreateNumNode(ONE);
 
+	node->sign 	= '^';
+	node->left 	= CreateVolNode();
+	node->right = right_node;
+
+	return node;
 }
+
 Node * Optimisation_10(Node * node)
 {
+	Node * right_node = CreateSignNode('-', node->left->right);
+	right_node->right = CreateNumNode(ONE);
 
+	node->right = node->right->left;
+	node->left->right = right_node;
+
+	return node;
 }
+
 Node * Optimisation_11(Node * node)
 {
+	Node * right_node = CreateSignNode('+', node->left->right);
+	right_node->right = CreateNumNode(ONE);
 
+	node->right = node->right->right;
+	node->left->right = right_node;
+
+	return node;
 }
+
+Node * Optimisation_12(Node * node)
+{
+	Node * right_node = CreateSignNode('+', node->left->right);
+	right_node->right = node->right->right;
+
+	node->sign 	= '^';
+	node->left 	= CreateVolNode();
+	node->right = right_node;
+
+	return node;
+}
+
+Node * Optimisation_13(Node * node)
+{
+	Node * right_node = CreateSignNode('+', node->right->right);
+	right_node->right = CreateNumNode(ONE);
+
+	node->sign 	= '^';
+	node->left 	= CreateVolNode();
+	node->right = right_node;
+
+	return node;
+}
+
+Node * Optimisation_14(Node * node)
+{
+	Node * right_node = CreateSignNode('-', node->right->right);
+	right_node->right = CreateNumNode(ONE);
+
+	node->left = node->left->left;
+	node->right->right = right_node;
+
+	return node;
+}
+
+Node * Optimisation_15(Node * node)
+{
+	Node * right_node = CreateSignNode('+', node->right->right);
+	right_node->right = CreateNumNode(ONE);
+
+	node->left = node->left->right;
+	node->right->right = right_node;
+
+	return node;
+}
+
