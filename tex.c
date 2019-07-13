@@ -3,7 +3,6 @@
 void MakeTex(Node * primary, Node * secondary)
 {
 	FILE * tex_output = fopen("output.tex", "w");
-
 	FILE * output_info = fopen("output_info.txt", "r");
 
 	int info_size = FSize(output_info);
@@ -66,7 +65,8 @@ void WriteFunction(Node * node, FILE * store)
 void LeftBrackets(Node * node, FILE * store)
 {
 	if(node->sign == '*' && node->left->sign == '+' ||
-	   node->sign == '*' && node->left->sign == '-')
+	   node->sign == '*' && node->left->sign == '-' ||
+	   node->sign == '^' && node->left->sign)
 	{
 		fprintf(store, "(");
 	}
@@ -78,7 +78,8 @@ void LeftBrackets(Node * node, FILE * store)
 void RightBrackets(Node * node, FILE * store)
 {
 	if(node->sign == '*' && node->left->sign == '+' ||
-	   node->sign == '*' && node->left->sign == '-')
+	   node->sign == '*' && node->left->sign == '-' ||
+	   node->sign == '^' && node->left->sign)
 	{
 		fprintf(store, ")");
 	}
@@ -92,6 +93,9 @@ void RightBrackets(Node * node, FILE * store)
 		fprintf(store, "(");
 	}
 
+	if(node->sign == '^' && node->right->sign)
+		fprintf(store, "{");
+
 	if(node->sign == '/')
 		fprintf(store, "}{");
 }
@@ -103,6 +107,9 @@ void EndBrackets(Node * node, FILE * store)
 	{
 		fprintf(store, ")");
 	}
+
+	if(node->sign == '^' && node->right->sign)
+		fprintf(store, "}");
 
 	if(node->sign == '/')
 		fprintf(store, "}");
