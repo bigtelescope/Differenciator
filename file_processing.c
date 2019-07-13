@@ -2,13 +2,9 @@
 
 long long FSize(FILE * ptrfile)
 {
-//--------------------------------------------------------
-	if(ptrfile == NULL)
-	{
-		perror("Error of file reading");
-		return -1;
-	}
-//--------------------------------------------------------
+	if(!ptrfile)
+		return EMPTY_FILE_ERR;
+
 	long long curroff = ftell(ptrfile);
 
 	fseek(ptrfile, 0, SEEK_END);
@@ -27,7 +23,7 @@ char * MakeArray(FILE * fileptr)
 	char * first_arr = (char *)calloc(size + 1, sizeof(char));
 	char * second_arr = (char *)calloc(size + 1, sizeof(char));
 
-	fread(first_arr, sizeof(char), size + 1, fileptr);//there can be not '\0' at the end
+	fread(first_arr, sizeof(char), size + 1, fileptr);
 
 	for(int i = 0; i < size; i++)
 		second_arr[i] = '\0';
