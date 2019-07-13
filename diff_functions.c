@@ -2,8 +2,6 @@
 
 Node * d(Node * node)
 {
-	printf("open d\n");
-
 	if(node->value)
 		return CreateNode();
 
@@ -26,11 +24,8 @@ Node * d(Node * node)
 		if(!strcmp("ln", node->function))
 			return DiffLnNode(node);
 
-	if(node->value == 0)
-	{
-		printf("(((((((((((\n");
+	if(node->value == 0)//default situation
 		return CreateNode();
-	}
 }
 
 Node * DiffAddNode(Node * node)
@@ -56,7 +51,7 @@ Node * DiffMultNode(Node * node)
 {
 	Node * new_left  = d(node->left);
 	Node * new_right = d(node->right);
-	printf("here\n");
+	
 	Node * left_node = CreateSignNode('*', new_left);
 	left_node->right = node->right;
 
