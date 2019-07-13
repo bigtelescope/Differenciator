@@ -7,12 +7,14 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define ONE 1
-#define TWO 2
-#define MINUS_ONE -1
-#define X_DIFFERENTIAL ONE
+#define ONE 			1
+#define TWO 			2
+#define MINUS_ONE 		-1
+#define X_DIFFERENTIAL	ONE
 
-#define DECIMAL 10
+#define DECIMAL			10
+
+#define EMPTY_FILE_ERR 	-1
 
 typedef struct Node
 {
@@ -64,6 +66,7 @@ Node * 	Bypass 		(Node *);
 bool 	isEmpty 	(Node *);
 bool 	isUnit 		(Node *);
 bool 	areSame		(Node *, Node *);
+bool 	areEqual	(Node *, Node *);
 bool 	areValue	(Node *, Node *);
 bool 	areTemp 	(Node *, Node *);
 
@@ -80,6 +83,13 @@ Node * Optimisation_5	(Node *);
 Node * Optimisation_6	(Node *);
 Node * Optimisation_7	(Node *);
 Node * Optimisation_8	(Node *);
+Node * Optimisation_9	(Node *);
+Node * Optimisation_10	(Node *);
+Node * Optimisation_11	(Node *);
+Node * Optimisation_12	(Node *);
+Node * Optimisation_13	(Node *);
+Node * Optimisation_14	(Node *);
+Node * Optimisation_15	(Node *);
 
 void 	WriteTree		(Node *, FILE *);
 void 	WriteFunction	(Node *, FILE *);
